@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class Bot : MonoBehaviour {
-
+public class Bot : MonoBehaviour 
+{
     public GameObject target;
     public GameObject sphere;
 
@@ -17,32 +17,37 @@ public class Bot : MonoBehaviour {
     float q = 0.0f;
 
 
-    void Start() {
+    void Start()
+    {
 
         agent = GetComponent<NavMeshAgent>();
         ds = target.GetComponent<Drive>();
         jitter = Instantiate(sphere);
     }
 
-    void Seek(Vector3 location) {
+    void Seek(Vector3 location)
+    {
 
         agent.SetDestination(location);
     }
 
-    void Flee(Vector3 location) {
+    void Flee(Vector3 location)
+    {
 
         Vector3 fleeVector = location - transform.position;
         agent.SetDestination(transform.position - fleeVector);
     }
 
-    void Pursue() {
+    void Pursue()
+    {
 
         Vector3 targetDir = target.transform.position - transform.position;
         float relativeHeading = Vector3.Angle(transform.forward, transform.TransformVector(target.transform.forward));
         float toTarget = Vector3.Angle(transform.forward, transform.TransformVector(targetDir));
 
 
-        if ((toTarget > 90.0f && relativeHeading < 20.0f) || ds.currentSpeed < 0.01f) {
+        if ((toTarget > 90.0f && relativeHeading < 20.0f) || ds.currentSpeed < 0.01f)
+        {
 
             // Debug.Log("SEEKING");
             Seek(target.transform.position);
@@ -54,14 +59,16 @@ public class Bot : MonoBehaviour {
         Seek(target.transform.position + target.transform.forward * lookAhead);
     }
 
-    void Evade() {
+    void Evade()
+    {
 
         Vector3 targetDir = target.transform.position - transform.position;
         float lookAhead = targetDir.magnitude / (agent.speed + ds.currentSpeed);
         Flee(target.transform.position + target.transform.forward * lookAhead);
     }
 
-    void Wander() {
+    void Wander()
+    {
 
         float wanderRadius = 10.0f;
         float wanderDistance = 20.0f;
@@ -82,17 +89,20 @@ public class Bot : MonoBehaviour {
         Seek(targetWorld);
     }
 
-    void Hide() {
+    void Hide()
+    {
 
         float dist = Mathf.Infinity;
         Vector3 chosenSpot = Vector3.zero;
 
-        for (int i = 0; i < World.Instance.GetHidingSpots().Length; ++i) {
+        for (int i = 0; i < World.Instance.GetHidingSpots().Length; ++i)
+        {
 
             Vector3 hideDir = World.Instance.GetHidingSpots()[i].transform.position - target.transform.position;
             Vector3 hidePos = World.Instance.GetHidingSpots()[i].transform.position + hideDir.normalized * 10.0f;
 
-            if (Vector3.Distance(transform.position, hidePos) < dist) {
+            if (Vector3.Distance(transform.position, hidePos) < dist)
+            {
 
                 chosenSpot = hidePos;
                 dist = Vector3.Distance(transform.position, hidePos);
@@ -102,19 +112,22 @@ public class Bot : MonoBehaviour {
         Seek(chosenSpot);
     }
 
-    void CleverHide() {
+    void CleverHide()
+    {
 
         float dist = Mathf.Infinity;
         Vector3 chosenSpot = Vector3.zero;
         Vector3 chosenDir = Vector3.zero;
         GameObject chosenGO = World.Instance.GetHidingSpots()[0];
 
-        for (int i = 0; i < World.Instance.GetHidingSpots().Length; ++i) {
+        for (int i = 0; i < World.Instance.GetHidingSpots().Length; ++i)
+        {
 
             Vector3 hideDir = World.Instance.GetHidingSpots()[i].transform.position - target.transform.position;
             Vector3 hidePos = World.Instance.GetHidingSpots()[i].transform.position + hideDir.normalized * 10.0f;
 
-            if (Vector3.Distance(transform.position, hidePos) < dist) {
+            if (Vector3.Distance(transform.position, hidePos) < dist)
+            {
 
                 chosenSpot = hidePos;
                 chosenDir = hideDir;
@@ -129,21 +142,24 @@ public class Bot : MonoBehaviour {
         float distance = 100.0f;
         hideCol.Raycast(backRay, out info, distance);
 
-        Seek(info.point + chosenDir.normalized * 2.0f);
+        Seek(info.point + chosenDir.normalized);
     }
 
-    bool CanSeeTarget() {
+    bool CanSeeTarget()
+    {
 
         RaycastHit raycastInfo;
         Vector3 rayToTarget = target.transform.position - transform.position;
-        if (Physics.Raycast(transform.position, rayToTarget, out raycastInfo)) {
+        if (Physics.Raycast(transform.position, rayToTarget, out raycastInfo))
+        {
 
             if (raycastInfo.transform.gameObject.tag == "cop") return true;
         }
         return false;
     }
 
-    void Update() {
+    void Update()
+    {
 
         // Seek(target.transform.position);
         // Flee(target.transform.position);

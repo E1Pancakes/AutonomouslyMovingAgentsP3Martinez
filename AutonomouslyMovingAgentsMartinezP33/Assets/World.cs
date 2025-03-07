@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class World : MonoBehaviour
+public sealed class World
 {
     private static readonly World instance = new World();
     private static GameObject[] hidingSpots;
@@ -19,7 +19,7 @@ public class World : MonoBehaviour
         get { return instance; }
     }
 
-    public static GameObject[] GetHidingSpots() 
+    public GameObject[] GetHidingSpots() 
     {
         return hidingSpots; 
     }
